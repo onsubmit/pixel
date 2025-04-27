@@ -11,7 +11,8 @@ export const initialSceneProps = {
       max: 3,
     },
   },
-  quality: 100,
-  scale: 1,
+  quality: 20,
+  scale: 5,
   colorFunc: null,
+  animation: 'stopped',
 } satisfies SceneProps;

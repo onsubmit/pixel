@@ -1,8 +1,8 @@
-import { JSX, useCallback, useRef } from 'react';
+import { JSX, useRef } from 'react';
 
 import styles from './config.module.css';
 import { initialSceneProps } from './initial-scene-props';
-import { SceneProps } from './scene';
+import { AnimationState, SceneProps } from './scene';
 
 const initialInputs = {
   xmin: null,
@@ -18,29 +18,35 @@ type InputRefs = {
 };
 
 type ConfigParams = {
-  render: (sceneParams: Omit<SceneProps, 'colorFunc'>) => void;
+  render: (
+    sceneParams: Omit<SceneProps, 'colorFunc' | 'animation'>,
+    animation?: AnimationState,
+  ) => void;
 };
 
 export function Config({ render }: ConfigParams): JSX.Element {
   const inputRef = useRef<InputRefs>(initialInputs);
 
-  const draw = useCallback(() => {
+  const draw = (animation?: AnimationState): void => {
     const { xmin, xmax, ymin, ymax, quality, scale } = inputRef.current;
-    render({
-      plane: {
-        x: {
-          min: xmin?.valueAsNumber ?? initialSceneProps.plane.x.min,
-          max: xmax?.valueAsNumber ?? initialSceneProps.plane.x.max,
+    render(
+      {
+        plane: {
+          x: {
+            min: xmin?.valueAsNumber ?? initialSceneProps.plane.x.min,
+            max: xmax?.valueAsNumber ?? initialSceneProps.plane.x.max,
+          },
+          y: {
+            min: ymin?.valueAsNumber ?? initialSceneProps.plane.y.min,
+            max: ymax?.valueAsNumber ?? initialSceneProps.plane.y.max,
+          },
         },
-        y: {
-          min: ymin?.valueAsNumber ?? initialSceneProps.plane.y.min,
-          max: ymax?.valueAsNumber ?? initialSceneProps.plane.y.max,
-        },
+        quality: quality?.valueAsNumber ?? initialSceneProps.quality,
+        scale: scale?.valueAsNumber ?? initialSceneProps.scale,
       },
-      quality: quality?.valueAsNumber ?? initialSceneProps.quality,
-      scale: scale?.valueAsNumber ?? initialSceneProps.scale,
-    });
-  }, [render]);
+      animation,
+    );
+  };
 
   return (
     <div className={styles.config}>
@@ -125,7 +131,9 @@ export function Config({ render }: ConfigParams): JSX.Element {
             defaultValue={initialSceneProps.scale}
           ></input>
         </div>
-        <button onClick={draw}>Render</button>
+        <button onClick={() => draw()}>Render</button>
+        <button onClick={() => draw('playing')}>Play</button>
+        <button onClick={() => draw('stopped')}>Stop</button>
       </div>
     </div>
   );

@@ -6,20 +6,24 @@ import { Card } from './components/card';
 import { CodeEditor } from './components/code-editor';
 import { Config } from './components/config';
 import { initialSceneProps } from './components/initial-scene-props';
-import { Scene, SceneProps } from './components/scene';
+import { AnimationState, Scene, SceneProps } from './components/scene';
 
 export function App(): JSX.Element {
   const editorRef = useRef<{ getValue: () => string }>(null);
 
   const [sceneProps, setSceneProps] = useState<SceneProps>(initialSceneProps);
 
-  const render = ({ plane, quality, scale }: Omit<SceneProps, 'colorFunc'>): void => {
-    setSceneProps({
+  const render = (
+    { plane, quality, scale }: Omit<SceneProps, 'colorFunc' | 'animation'>,
+    animation?: AnimationState,
+  ): void => {
+    setSceneProps((x) => ({
       plane,
       quality,
       scale,
       colorFunc: getColorFunc(editorRef.current?.getValue()),
-    });
+      animation: animation ?? x.animation,
+    }));
   };
 
   return (

@@ -7,15 +7,20 @@ import { Drawer } from '../drawer';
 import { Canvas } from './canvas';
 import styles from './scene.module.css';
 
+export type AnimationState = 'stopped' | 'playing';
+
 export type SceneProps = {
   plane: CartesianPlane;
   quality: number;
   scale: number;
   colorFunc: ColorFunc | null;
+  animation: AnimationState;
 };
 
-export function Scene({ plane, quality, scale, colorFunc }: SceneProps): JSX.Element {
+export function Scene({ plane, quality, scale, colorFunc, animation }: SceneProps): JSX.Element {
   const [visible, setVisible] = useState(false);
+  const animationRequestIdRef = useRef<number>(-1);
+  const timestampRef = useRef<number>(1000);
 
   const increment = 1 / quality;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -41,14 +46,35 @@ export function Scene({ plane, quality, scale, colorFunc }: SceneProps): JSX.Ele
     setVisible(true);
 
     const drawer = new Drawer(canvasModel);
-    for (let y = plane.y.max; y >= plane.y.min; y -= increment) {
-      setTimeout(() => {
+
+    const draw = (time: DOMHighResTimeStamp): void => {
+      timestampRef.current = time;
+
+      let i = 0;
+      for (let y = plane.y.max; y >= plane.y.min; y -= increment) {
         for (let x = plane.x.min; x <= plane.x.max; x += increment) {
-          drawer.draw({ x, y }, colorFunc(x, y, plane), scale);
+          drawer.draw({ x, y }, colorFunc(x, y, time, i++, plane), scale);
         }
-      });
+      }
+    };
+
+    function step(time: DOMHighResTimeStamp): void {
+      draw(time);
+
+      if (animation === 'playing') {
+        animationRequestIdRef.current = window.requestAnimationFrame(step);
+      } else {
+        window.cancelAnimationFrame(animationRequestIdRef.current);
+      }
     }
-  }, [canvasModel, colorFunc, increment, plane, quality, scale]);
+
+    if (animation === 'playing') {
+      animationRequestIdRef.current = window.requestAnimationFrame(step);
+    } else {
+      window.cancelAnimationFrame(animationRequestIdRef.current);
+      draw(timestampRef.current);
+    }
+  }, [animation, canvasModel, colorFunc, increment, plane, quality, scale]);
 
   return (
     <div className={styles.scene}>
