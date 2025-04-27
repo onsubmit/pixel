@@ -6,4 +6,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   base: '/pixel/',
   plugins: [react()],
+  build: {
+    sourcemap: true,
+  },
 });
