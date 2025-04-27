@@ -1,0 +1,37 @@
+.config {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: grid;
+  grid-template-columns: 6rem 6rem;
+  gap: 1rem;
+
+  label {
+    text-align: right;
+  }
+
+  input {
+    font-size: 1.5rem;
+  }
+}
+
+button {
+  height: 4rem;
+  font-size: 2rem;
+}
+
+@media only screen and (max-width: 1200px) {
+  .config {
+    flex-direction: column;
+  }
+}

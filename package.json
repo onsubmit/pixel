@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.3",
+    "@fontsource/inter": "^5.2.5",
+    "@uiw/codemirror-theme-vscode": "^4.23.10",
+    "@uiw/react-codemirror": "^4.23.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

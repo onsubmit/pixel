@@ -1,0 +1,13 @@
+.scene {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.hidden {
+  display: none;
+}
+
+canvas {
+  border: 0.0625rem solid #000;
+}

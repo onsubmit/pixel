@@ -1,0 +1,6 @@
+.card {
+  border: 0.125rem solid #333;
+  border-radius: 0.5rem;
+  box-shadow: -0.0625rem -0.0625rem 1rem 0 rgba(0, 0, 0, 0.75);
+  overflow: auto;
+}
