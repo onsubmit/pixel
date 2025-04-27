@@ -49,7 +49,9 @@ export const getColorFunc = (js: string | undefined): ColorFunc => {
         return 'red';
       }
     };
-  } catch {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_e) {
+    debugger;
     return unknown;
   }
 };
